@@ -7,6 +7,11 @@ class LinkedPair:
         self.value = value
         self.next = None
 
+
+import time 
+import hashlib
+import bcrypt
+
 class HashTable:
     '''
     A hash table that with `capacity` buckets
@@ -15,14 +20,18 @@ class HashTable:
     def __init__(self, capacity):
         self.capacity = capacity  # Number of buckets in the hash table
         self.storage = [None] * capacity
+        self.count = 0 
 
-
+  
     def _hash(self, key):
         '''
         Hash an arbitrary key and return an integer.
-
+        
         You may replace the Python hash with DJB2 as a stretch goal.
         '''
+        start = time.time()
+        hash(key)
+        end = time.time()
         return hash(key)
 
 
@@ -41,6 +50,7 @@ class HashTable:
         within the storage capacity of the hash table.
         '''
         return self._hash(key) % self.capacity
+      
 
 
     def insert(self, key, value):
@@ -51,7 +61,23 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        self.count += 1 
+        #compute index of key using hash function
+        index = self.hash(key)
+        #create new node if bucket at index is empty 
+        node = self.buckets[index]        
+        if node is None: 
+          self.buckets[index] = LinkedPair(key, value)
+          return 
+        
+        prev = node 
+        while node is not None: 
+          #collision, a node exists at this index
+          #iterate to the end of the list and add new node 
+          #with provided  key / value 
+          prev = node 
+          node = node.next #iteration
+          prev.next = LinkedPair(key, value)
 
 
 
