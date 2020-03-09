@@ -89,7 +89,28 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        #compute index of key using a hash function 
+        index = self.hash(key)
+        node = self.buckets[index]
+        prev = None
+        
+        #iterate to the requested node 
+        while node is not None and node.key != key: 
+          prev = node
+          node = node.next 
+          
+        if node is None:
+          print("warning! key is not found")
+        
+        else: 
+          self.count -= 1 
+          result = node.value
+          if prev is None:
+            self.buckets[index]  = node.next 
+          else: 
+            prev.next = prev.next.next
+            
+          return result
 
 
     def retrieve(self, key):
