@@ -121,7 +121,14 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        index = self.hash(key)
+        node = self.buckets[index]
+        while node is not None and node.key != key: 
+          node = node.next 
+        if node is None: 
+          return None
+        else: 
+          return node.value
 
 
     def resize(self):
