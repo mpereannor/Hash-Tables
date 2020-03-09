@@ -10,15 +10,15 @@ class LinkedPair:
 
 import time 
 import hashlib
-import bcrypt
+# import bcrypt
 
 class HashTable:
     '''
-    A hash table that with `capacity` buckets
+    A hash table that with `capacity` storage
     that accepts string keys
     '''
     def __init__(self, capacity):
-        self.capacity = capacity  # Number of buckets in the hash table
+        self.capacity = capacity  # Number of storage in the hash table
         self.storage = [None] * capacity
         self.count = 0 
 
@@ -33,6 +33,7 @@ class HashTable:
         hash(key)
         end = time.time()
         return hash(key)
+        
 
 
     def _hash_djb2(self, key):
@@ -41,7 +42,16 @@ class HashTable:
 
         OPTIONAL STRETCH: Research and implement DJB2
         '''
-        pass
+      #start from an arbitrary prime number 
+      hash = 9491 
+      #iterate over each character in the key 
+      for el in key: 
+        #set hash value to the bit shift left by 5 
+        #of the hash value and sum of the hash value
+        #then add the value for the char
+        hash = ((hash << 5) + hash) + ord(el)
+        #return the hash value
+        return hash
 
 
     def _hash_mod(self, key):
@@ -63,11 +73,11 @@ class HashTable:
         '''
         self.count += 1 
         #compute index of key using hash function
-        index = self.hash(key)
+        index = self._hash(key)
         #create new node if bucket at index is empty 
-        node = self.buckets[index]        
+        node = self.storage[index]        
         if node is None: 
-          self.buckets[index] = LinkedPair(key, value)
+          self.storage[index] = LinkedPair(key, value)
           return 
         
         prev = node 
@@ -90,8 +100,8 @@ class HashTable:
         Fill this in.
         '''
         #compute index of key using a hash function 
-        index = self.hash(key)
-        node = self.buckets[index]
+        index = self._hash_mod(key)
+        node = self.storage[index]
         prev = None
         
         #iterate to the requested node 
@@ -106,7 +116,7 @@ class HashTable:
           self.count -= 1 
           result = node.value
           if prev is None:
-            self.buckets[index]  = node.next 
+            self.storage[index]  = node.next 
           else: 
             prev.next = prev.next.next
             
@@ -121,8 +131,8 @@ class HashTable:
 
         Fill this in.
         '''
-        index = self.hash(key)
-        node = self.buckets[index]
+        index = self._hash_mod(key)
+        node = self.storage[index]
         while node is not None and node.key != key: 
           node = node.next 
         if node is None: 
